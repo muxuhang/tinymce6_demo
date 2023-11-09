@@ -1,0 +1,164 @@
+<!-- 
+** 新增使用 
+1、tinymce编辑器         https://www.tiny.cloud/
+2、mathtype公式编辑器     https://store.wiris.com/en/products/downloads/mathtype/integrations?_ga=2.51356393.1742385939.1699414837-470005301.1699414837#mathtype_for_tinymce5
+
+-->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- jsmind -->
+    <link
+      type="text/css"
+      rel="stylesheet"
+      href="https://unpkg.com/jsmind@0.7.5/style/jsmind.css"
+    />
+    <script
+      type="text/javascript"
+      src="https://unpkg.com/jsmind@0.7.5/es6/jsmind.js"
+    ></script>
+    <script
+      type="text/javascript"
+      src="https://unpkg.com/jsmind@0.7.5/es6/jsmind.draggable-node.js"
+    ></script>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+      }
+      .container {
+        position: relative;
+        height: 100vh;
+        width: 100vw;
+        overflow: hidden;
+      }
+      body {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+      }
+      #jsmind_container {
+        height: 100%;
+        width: 100%;
+        border: 1px solid black;
+        margin: auto;
+      }
+      .richtext,
+      .tox-tinymce {
+        display: none;
+        position: absolute !important;
+        left: 0;
+        bottom: 0;
+        height: 400px;
+        width: 400px;
+      }
+      .tox-tinymce {
+        opacity: 0;
+        z-index: -100;
+      }
+      .tox-editor-container {
+        height: 100% !important;
+      }
+      .tox-statusbar {
+        display: none !important;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div id="jsmind_container"></div>
+      <div id="editInput" class="richtext"></div>
+    </div>
+  </body>
+</html>
+<script src="./js/tinymce/tinymce.min.js"></script>
+<script type="text/javascript">
+  var options = {
+    container: 'jsmind_container',
+    editable: true,
+    theme: 'orange',
+    // support_html: true,
+  };
+  var jm;
+  var editor, hand;
+  window.onload = function () {
+    // 加载编辑器,
+    renderTinymce();
+    renderJsMind();
+  };
+  function renderTinymce() {
+    tinymce.init({
+      selector: '#editInput',
+      height: 400,
+      menubar: false,
+      convert_urls: false,
+      content_css: 'dark', //公式为图片,颜色为白色，选择黑色风格
+      external_plugins: {
+        tiny_mce_wiris: '../mathtype-tinymce6/plugin.min.js', //加载插件路径，使用与tinymce.min.js的相对路径或使用绝对路径
+      },
+      extended_valid_elements: '*[.*]',
+      toolbar:
+        'tiny_mce_wiris_formulaEditor tiny_mce_wiris_formulaEditorChemistry', //菜单栏使用数学公式和化学公式,若使用其他功能，参考index.html
+      mathTypeParameters: {
+        editorParameters: {
+          //这里设置公式编辑器的字体大小、颜色和背景
+          fontSize: '24px',
+          color: '#fff',
+          backgroundColor: '#333',
+        },
+      },
+      content_style: 'p,div{margin:0;padding:0;border:0;font-size:24px}', //设置编辑器样式
+      init_instance_callback: (edit) => {
+        edit.on('input', (e) => {
+          saveMathType(e.target.innerHTML);
+        });
+        edit.on('change', (e) => {
+          // 这是没有使用getContent()的原因是它是获取公式语法，不是图片，jsmind展示效果不好
+          const innerHTML =
+            e.target.iframeElement.contentWindow.document.getElementById(
+              'tinymce'
+            ).innerHTML;
+          saveMathType(innerHTML);
+        });
+      },
+    });
+  }
+  function renderJsMind() {
+    jm = new jsMind(options);
+    jm.show();
+    _renderInput();
+  }
+  // 编辑器显示隐藏
+  function _renderInput() {
+    const root = jm;
+    root.view.e_nodes.addEventListener('click', (ele) => {
+      const selected = root.view.e_nodes.querySelector('.selected');
+      const inputNode = document.getElementsByClassName('tox-tinymce')[0];
+      if (selected) {
+        tinymce.get('editInput').setContent(selected.innerHTML);
+        inputNode.style.display = 'block';
+        inputNode.style.zIndex = 200;
+        inputNode.style.opacity = 1;
+        // inputNode.style.top =
+        //   parseFloat(selected.style.top) +
+        //   parseFloat(selected.clientHeight) +
+        //   2 +
+        //   'px';
+        // inputNode.style.left = selected.style.left;
+      } else {
+        inputNode.style.display = 'none';
+      }
+    });
+  }
+
+  // 保存公式
+  function saveMathType(msg) {
+    const node = jm.get_selected_node();
+    if (node) {
+      jm.update_node(node.id, msg);
+    }
+  }
+</script>

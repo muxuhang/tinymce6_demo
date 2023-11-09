@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style type="text/css">
+      .div_height{
+        height:300px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="div_height">
+      12345
+      <div class="div_content">
+        <p>内容12345·1234</p>
+        <p>
+          <img src='/images/project1.png' alt=''/>
+        </p>
+      </div>
+    </div>
+  </body>
+</html>
+<script>
+  const div_content= document.querySelectorAll('.div_content')
+  div_content.forEach(ele=>{
+    console.log(ele.clientHeight)
+  })
+</script>

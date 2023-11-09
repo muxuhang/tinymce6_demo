@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style type="text/css">
+      /* 文本换行，长串字母不会自动换行 */
+      *{
+        margin: 0 ;
+        padding: 0;
+      }
+      .flex_box{
+        display:flex;
+        flex-direction: row;
+        width: 100%;
+        overflow: hidden;
+      }
+      .flex_item{
+        
+      }
+      .flex_1{
+        flex:1;
+        word-wrap:break-word;
+        word-break:break-all;
+        overflow: hidden;
+        position: relative;
+      }
+      .table_box{
+        width: 100%;
+        overflow: auto;
+      }
+      table, th, td {
+        /* border: 1px solid black; */
+        border-collapse: collapse;
+      }
+      td{
+        border: 1px solid black;
+        padding: 3px 20px;
+        border-style: dotted;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="flex_box">
+      <div class="flex_item">
+        左侧
+      </div>
+      <div class="flex_item flex_1">
+        <div class="table_box">
+          <table>
+            <thead>
+              <th>
+                <td>1</td>
+                <td>1</td>
+                <td>1</td>
+                <td>1</td>
+                <td>1</td>
+                <td>1</td>
+                <td>1</td>
+                <td>1</td>
+                <td>1</td>
+                <td>1</td>
+                <td>1</td>
+                <td>1</td>
+                <td>1</td>
+                <td>1</td>
+                <td>1</td>
+                <td>1</td>
+                <td>1</td>
+              </th>
+            </thead>
+          </table>
+        </div>
+        <!-- 2342345awdwadawd2342345awdwadawd2342345awdwadawd2342345awdwadawd2342345awdwadawd2342345awdwadawd -->
+      </div>
+    </div>
+  </body>
+</html>
+<script>
+  
+</script>

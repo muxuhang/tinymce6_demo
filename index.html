@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style type="text/css">
+      .text_emphasis {
+        text-emphasis: dot #333;
+        text-emphasis-position: under;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="richtext">
+      <span style="text-emphasis: dot #333; text-emphasis-position: under"
+        >text_emphasistext_emphasistext_emphasis</span
+      >
+      <div>CLASS</div>
+      <p><b>123456</b></p>
+      <span class="text_emphasis">text_emphasistext_emphasistext_emphasis</span>
+    </div>
+  </body>
+</html>
+<script src="./js/tinymce/tinymce.min.js"></script>
+<script>
+  tinymce.init({
+    selector: '.richtext',
+    height: 600,
+    // language_url: '/static/attachments/widgets/zh_CN.js',
+    plugins: 'image lists autolink fullscreen table media',
+    menubar: false,
+    newline_behavior:'linebreak',
+    external_plugins: {
+      focuspoint: '/js/focuspoint.js',
+      drawingBoard: '/js/drawingBoard.js',
+      letterspacing: '/js/letterspacing.js',
+      formatpainter: '/js/formatpainter/plugin.min.js',
+      formatpainterfree: '/js/formatpainterfree.js',
+      tiny_mce_wiris: '../mathtype-tinymce6/plugin.min.js',
+    },
+    wirisimagebgcolor: '#ff00ff',
+    wirisimagesymbolcolor: '#ffff00',
+    wiristransparency: 'false',
+    content_style:
+      'p,div{margin:0;padding:0;border:0;}.text_emphasis{text-emphasis:dot #333;text-emphasis-position:under}',
+    toolbar:
+      'removeformat formatpainterfree bold italic forecolor backcolor focuspoint drawingBoard tiny_mce_wiris_formulaEditor tiny_mce_wiris_formulaEditorChemistry| fullscreen',
+  });
+</script>
