@@ -208,17 +208,20 @@
         margin-left: 10px;
       }
       #katex_preview {
-        width: 378px;
-        height: 210px;
+        width: calc(100% - 20px);
+        height: 90px;
         padding: 10px;
         margin-top: 10px;
-        padding: 10px;
         border: 1px solid #eee;
         border-radius: 3px;
-        overflow-x: hidden;
-        overflow-y: auto;
+        display: flex;
+        text-align: center;
+        align-items: center;
+        justify-content: center;
+        overflow: auto;
       }
       #katex_preview .katex {
+        font-size: 24px;
         font: Verdana, Arial, Helvetica, sans-serif !important;
       }
       .insert_button {
@@ -234,7 +237,7 @@
         border-top: 1px solid #eee;
       }
       .modal_footer a {
-        color: rgb(25, 118, 210, 0.9);
+        color: rgb(25, 118, 210);
         font-size: 14px;
         text-decoration: none;
       }
@@ -274,14 +277,14 @@
           </div>
           <div class="modal_content">
             <div class="content_left">
-              <div id="edit_input" class="richtext"></div>
-              <!-- <div class="katex_input_box">
+              <div id="edit_input" class="richtext">1234</div>
+              <div class="katex_input_box">
                 <textarea id="katex_input" placeholder="输入公式"></textarea>
                 <button class="insert_button" id="insert_button">
                   <div>插入</div>
                   <div>公式</div>
                 </button>
-              </div> -->
+              </div>
               <div id="katex_preview">
                 <div>公式预览</div>
               </div>
@@ -298,11 +301,7 @@
             </div>
           </div>
           <div class="modal_footer">
-            <div>
-              <a href="https://katex.org/docs/supported.html" target="_blank"
-                >了解如何使用latex</a
-              >
-            </div>
+            <div><a href="https://katex.org/docs/supported.html" target="_blank">了解如何使用latex</a></div>
             <div style="flex: 1"></div>
             <button class="modal_close">取消</button>
             <button class="save_button" id="save_button">保存</button>
@@ -339,23 +338,25 @@
       menubar: false,
       cleanup: false,
       convert_urls: false,
-      auto_focus: 'element1',
-      inline_boundaries: false,
-      br_in_pre: false,
       content_css: '/css/katex.css',
-      noneditable_regexp: /\d{3}-\d{3}-\d{3}/g,
       extended_valid_elements: '*[.*]',
       valid_elements: '*[.*]', //删除清除规则
       toolbar: false,
-      content_style: 'p,div{margin:0;padding:0;border:0;}', //设置编辑器样式
-      setup: (editor) => {
-        editor.on('SetContent', (e) => {
-          previewText('SetContent');
-        });
-        editor.on('input', (e) => {
-          previewText('Input');
-        });
-      },
+      // content_css: 'dark', //公式为图片,颜色为白色，选择黑色风格
+      // external_plugins: {
+      //   tiny_mce_wiris: '../mathtype-tinymce6/plugin.min.js', //加载插件路径，使用与tinymce.min.js的相对路径或使用绝对路径
+      // },
+      // extended_valid_elements: '*[.*]',
+      // toolbar: 'tiny_mce_wiris_formulaEditor tiny_mce_wiris_formulaEditorChemistry', //菜单栏使用数学公式和化学公式,若使用其他功能，参考index.html
+      // mathTypeParameters: {
+      //   editorParameters: {
+      //     //这里设置公式编辑器的字体大小、颜色和背景
+      //     fontSize: '24px',
+      //     color: '#fff',
+      //     backgroundColor: '#333',
+      //   },
+      // },
+      content_style: 'p,div{margin:0;padding:0;border:0;font-size:24px}', //设置编辑器样式
     });
   }
   function renderJsMind() {
@@ -401,25 +402,18 @@
     const values = document.querySelectorAll('.tab_value .katex_box');
     values.forEach((ele) => {
       ele.addEventListener('click', (e) => {
-        const edit_input = tinymce.get('edit_input');
-        const range = edit_input.selection.getRng();
-        if (
-          range.commonAncestorContainer.nodeType === Node.TEXT_NODE &&
-          range.commonAncestorContainer.parentNode &&
-          range.commonAncestorContainer.parentNode.classList.contains(
-            'm_katex_span'
-          )
-        ) {
-          edit_input.insertContent(e.currentTarget.dataset.value);
-        } else {
-          const insertVal = document.createElement('span');
-          insertVal.classList.add('m_katex_span');
-          insertVal.innerHTML = e.currentTarget.dataset.value;
-          edit_input.insertContent(' ' + insertVal.outerHTML + ' ');
-        }
-        edit_input.focus();
-        edit_input.selection.collapse(false);
-        previewText('Change');
+        const katex_input = document.getElementById('katex_input');
+        const before_text = katex_input.value.substring(
+          0,
+          katex_input.selectionStart
+        );
+        const after_text = katex_input.value.substring(
+          katex_input.selectionEnd
+        );
+        katex_input.value =
+          before_text + e.currentTarget.dataset.value + after_text;
+
+        _previewChange(katex_input.value);
       });
     });
   }
@@ -447,14 +441,11 @@
     root.view.e_nodes.addEventListener('dblclick', (ele) => {
       const selected = root.get_selected_node();
       if (selected) {
+        console.log(selected.topic);
         modal.style.display = 'block';
         const inputDom = tinymce.get('edit_input');
-        const newDiv = document.createElement('div');
-        newDiv.innerHTML = selected.topic;
-        newDiv.querySelectorAll('.m_katex_span').forEach((katex_span) => {
-          katex_span.innerHTML = katex_span.dataset.value;
-        });
-        inputDom.setContent(newDiv.innerHTML);
+        // console.log(selected.topic);
+        inputDom.resetContent(selected.topic);
       }
     });
     const closeBtn = document.querySelectorAll('#edit_modal .modal_close');
@@ -465,60 +456,76 @@
         });
       });
   }
-  // 预览
-  function previewText(type) {
-    const val = tinymce.get('edit_input').getContent();
-    _previewChange(val);
-  }
-  function _previewChange(value) {
-    const katex_preview = document.getElementById('katex_preview');
-    katex_preview.innerHTML = value;
-    katex_preview.querySelectorAll('.m_katex_span').forEach((ele) => {
-      ele.dataset.value = ele.innerText;
-      _renderKatex(ele.innerText, ele);
+
+  // 公式编辑器
+  function _editKatex() {
+    const katex_input = document.getElementById('katex_input');
+    const katex_preview = document.querySelector('#katex_preview');
+    katex_input.addEventListener('input', (e) => {
+      if (!e.target.value) {
+        katex_preview.innerHTML = '<div>公式预览</div>';
+      } else {
+        _previewChange(e.target.value);
+      }
     });
   }
-  const ESCAPE_CHARACTERS = {
-    nbsp: ' ',
-    lt: '<',
-    gt: '>',
-    amp: '&',
-    apos: '"',
-    ensp: '	 ',
-    emsp: ' ',
-    quot: '"',
-    middot: '·',
-    brvbar: '¦',
-    mdash: '—',
-    ndash: '–',
-    ge: '≥',
-    le: '≤',
-    laquo: '«',
-    raquo: '»',
-    deg: '°',
-    bull: '•',
-    macr: '¯',
-    '#64': '@',
-    ldquo: '“',
-    rdquo: '”',
-    rsquo: '‚',
-    lsquo: '‘',
-  };
-  // 处理转义字符
-  function handleEscapeChar(str) {
-    return str.replace(
-      new RegExp(`&(${Object.keys(ESCAPE_CHARACTERS).join('|')});`, 'g'),
-      (all, t) => {
-        return ESCAPE_CHARACTERS[t];
-      }
-    );
+  _editKatex();
+  function _previewChange(value) {
+    const katex_preview = document.getElementById('katex_preview');
+    _renderKatex(value, katex_preview);
   }
-
-  // 保存编辑内容
+  // 公式插入文本编辑器中,并清空
+  function insert_button() {
+    const insert_button = document.getElementById('insert_button');
+    insert_button.addEventListener('click', async (ele) => {
+      const katex_input = document.getElementById('katex_input');
+      const katex_preview = document.querySelector('#katex_preview');
+      if (!katex_preview) return;
+      const useImage = false;
+      const inputDom = tinymce.get('edit_input');
+      const range = inputDom.selection.getRng();
+      if (useImage) {
+        const imgUrl = await saveLatexToImage(katex_preview);
+        const img = document.createElement('img');
+        img.src = imgUrl;
+        img.style.verticalAlign = 'middle';
+        range.insertNode(img);
+      } else {
+        await range.insertNode(katex_preview.querySelector('.katex'));
+      }
+      katex_input.value = '';
+      katex_preview.innerHTML = '<div>公式预览</div>';
+    });
+  }
+  insert_button();
+  async function saveLatexToImage(dom) {
+    console.log(dom);
+    return html2canvas(dom, {
+      backgroundColor: null,
+      logging: true,
+    }).then((canvas) => {
+      const oldCanvas = document.getElementById('read_canvas');
+      if (oldCanvas) {
+        oldCanvas.parentElement.removeChild(oldCanvas);
+      }
+      canvas.id = 'read_canvas';
+      document.body.appendChild(canvas);
+      const oldImage = document.getElementById('read_image');
+      if (oldImage) {
+        oldImage.parentElement.removeChild(oldImage);
+      }
+      var ctx = canvas.getContext('2d');
+      var image = new Image();
+      image.src = canvas.toDataURL('image/png');
+      image.id = 'read_image';
+      return image.src;
+    });
+  }
+  // 保存公式
   function saveMathType() {
     const save_button = document.getElementById('save_button');
     save_button.addEventListener('click', () => {
-      let msg = document.getElementById('katex_preview').innerHTML;
+      let msg = tinymce.get('edit_input').getBody().innerHTML;
       const node = jm.get_selected_node();
       const val = document.createElement('div');
       val.innerHTML = msg;
@@ -531,3 +538,20 @@
   }
   saveMathType();
 </script>
+
+<!-- <script>
+  document.addEventListener('DOMContentLoaded', function () {
+    renderMathInElement(document.body, {
+      // customised options
+      // • auto-render specific keys, e.g.:
+      delimiters: [
+        { left: '$$', right: '$$', display: true },
+        { left: '$', right: '$', display: false },
+        { left: '\\(', right: '\\)', display: false },
+        { left: '\\[', right: '\\]', display: true },
+      ],
+      // • rendering keys, e.g.:
+      throwOnError: false,
+    });
+  });
+</script> -->
