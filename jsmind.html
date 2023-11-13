@@ -474,6 +474,7 @@
     insert_button.addEventListener('click', async (ele) => {
       const katex_input = document.getElementById('katex_input');
       const katex_preview = document.querySelector('#katex_preview');
+      if (!katex_preview) return;
       const useImage = false;
       const inputDom = tinymce.get('edit_input');
       const range = inputDom.selection.getRng();
