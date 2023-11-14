@@ -127,55 +127,133 @@ const latex_data = {
       ]
     },
     {
-      title: '\\therefore\\because',
+      title: '集合',
       list: [{
         list: [
-          '\\therefore',
-          '\\because',
-          '\\partial'
-        ]
-      }]
-    },
-    {
-      title: '\\alpha\\beta',
-      list: [{
-        list: [
-          '\\alpha',
-          '\\beta',
-          '\\gamma',
-        ]
-      }]
-    },
-    {
-      title: '\\pi\\times',
-      list: [{
-        list: [
-          '\\pi',
-          '\\times',
+          '\\forall',
+          '\\exists',
+          '\\emptyset',
+          '\\varnothing',
+          '\\in',
+          '\\ni',
+          '\\not\in',
+          '\\notin',
+          '\\subset',
+          '\\subseteq',
+          '\\supset',
+          '\\supseteq',
+          '\\cap',
           '\\bigcap',
+          '\\cup',
+          '\\bigcup',
+          '\\biguplus',
+          '\\sqsubset',
+          '\\sqsubseteq',
+          '\\sqsupset',
+          '\\sqsupseteq',
+          '\\sqcap',
+          '\\sqcup',
+          '\\bigsqcup',
         ]
       }]
     },
     {
-      title: '\\Rightarrow\\exists',
+      title: '函数',
       list: [{
         list: [
-          '\\Rightarrow',
-          '\\exists',
-          '\\triangle',
+          '\\sin\\theta',
+          '\\cos\\theta',
+          '\\tan\\theta',
+          '\\arcsin\\frac{L}{r}',
+          '\\arccos\\frac{T}{r}',
+          '\\arctan\\frac{L}{T}',
+          '\\sinh g',
+          '\\cosh h',
+          '\\tanh i',
+          '\\operatorname{sh}j',
+          '\\operatorname{argsh}k',
+          '\\operatorname{ch}h',
+          '\\operatorname{argch}l',
+          '\\operatorname{th}i',
+          '\\operatorname{argth}m',
+          '\\liminf I',
+          '\\limsup S',
+          '\\max H',
+          '\\min L',
+          '\\inf s',
+          '\\sup t',
+          '\\exp\\!t',
+          '\\ln X',
+          '\\lg X',
+          '\log X',
+          '\\log_\\alpha X',
+          '\\ker x',
+          '\\deg x',
+          '\\gcd(T,U,V,W,X)',
+          '\\Pr x',
+          '\\det x',
+          '\\hom x',
+          '\\arg x',
+          '\\dim x',
+          '\\lim_{t\\to n}T',
         ]
       }]
     },
     {
-      title: '\\Rightarrow\\exists',
+      title: '箭头',
       list: [{
         list: [
+          '\\leftarrow',
+          '\\gets',
+          '\\rightarrow',
+          '\\to',
+          '\\leftrightarrow',
+          '\\longleftarrow',
+          '\\longrightarrow',
+          '\\mapsto',
+          '\\longmapsto',
+          '\\hookrightarrow',
+          '\\hookleftarrow',
+          '\\nearrow',
+          '\\searrow',
+          '\\swarrow',
+          '\\nwarrow',
+          '\\uparrow',
+          '\\downarrow',
+          '\\updownarrow',
+          '\\rightharpoonup',
+          '\\rightharpoondown',
+          '\\leftharpoondown',
+          '\\upharpoonleft',
+          '\\upharpoonright',
+          '\\downharpoonleft',
+          '\\downharpoonright',
+          '\\Leftarrow',
           '\\Rightarrow',
-          '\\exists',
-          '\\triangle',
+          '\\Leftrightarrow',
+          '\\Longleftarrow',
+          '\\Longrightarrow',
+          '\\Longleftrightarrow',
+          '\\Uparrow',
+          '\\Downarrow',
+          '\\Updownarrow'
         ]
       }]
-    }
+    },
+    {
+      title: '矩阵',
+      list: [{
+        list: [
+          '\\begin{matrix}x & y \\\\z & v\\end{matrix}',
+          '\\begin{vmatrix}x & y \\\\z & v\\end{vmatrix}',
+          '\\begin{Vmatrix}x & y \\\\z & v\\end{Vmatrix}',
+          `\\begin{bmatrix} 0 & \\cdots & 0 \\\\\\vdots & \\ddots & \\vdots \\\\0 & \\cdots & 0\\end{bmatrix}`,
+          `\\begin{Bmatrix} x & y \\\\ z & v \\end{Bmatrix}`,
+          `\\begin{pmatrix} x & y \\\\ z & v \\end{pmatrix}`,
+          `\\bigl( \\begin{smallmatrix} a&b\\\\ c&d \\end{smallmatrix} \\bigr)`,
+        ]
+      }]
+    },
   ]
 }
 
