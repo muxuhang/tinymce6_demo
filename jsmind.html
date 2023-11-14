@@ -127,7 +127,7 @@
         flex: 1;
       }
       .modal_content .content_right {
-        width: 240px;
+        width: 300px;
         border: 1px solid #eee;
         margin-left: 10px;
         border-radius: 3px;
@@ -162,6 +162,13 @@
         flex-direction: row;
         flex-wrap: wrap;
         align-items: center;
+      }
+      .formula_box .active {
+        display: flex;
+      }
+      .formula_box div {
+        display: none;
+        flex-wrap: wrap;
       }
       .tab_value .title {
         font-size: 14px;
@@ -279,7 +286,7 @@
         max-height: 400px;
       }
       .modal_hidden {
-        display: none;
+        /* display: none; */
       }
       .modal_more {
         text-align: center;
@@ -331,6 +338,7 @@
               </div>
             </div>
             <div class="content_right">
+              <div id="tab" class="tab"></div>
               <div class="tab_value">
                 <div class="item" id="formula_box"></div>
               </div>
@@ -338,7 +346,7 @@
           </div>
           <div class="modal_footer">
             <div class="modal_more">
-              <div id="modal_more_btn">更多功能</div>
+              <div id="modal_more_btn">插入公式</div>
             </div>
             <div>
               <a href="https://katex.org/docs/supported.html" target="_blank"
@@ -370,8 +378,8 @@
     // 加载编辑器,
     renderTinymce();
     renderJsMind();
-    renderKatexList('symbol');
-    renderKatexList('formula');
+    renderKatexList();
+    renderKatexFormulaList();
     _addEditKatex();
   };
   function renderTinymce() {
@@ -396,8 +404,9 @@
     _renderEdit();
     showJsMindItem();
   }
-  // 加载预置公式
-  function renderKatexList(tabKey) {
+  // 加载预置符号
+  function renderKatexList() {
+    const tabKey = 'symbol';
     const box = document.getElementById(tabKey + '_box');
     let innerHTML = '';
     latex_data[tabKey].map((item) => {
@@ -407,23 +416,69 @@
       box.appendChild(titleEl);
       item.list.map((row) => {
         var divEl = document.createElement('div');
-        if (!row.label) {
-          divEl.className = 'katex_box';
-          divEl.dataset.value = row;
-          _renderKatex(row, divEl);
-        } else {
-          divEl.style.width = '100%';
-          divEl.innerHTML = `<div style="color:#666;padding:10px;font-size:14px;">${row.label}</div>`;
-          var divEl2 = document.createElement('div');
-          divEl2.className = 'katex_box';
-          divEl2.dataset.value = row.value;
-          _renderKatex(row.value, divEl2);
-          divEl.appendChild(divEl2);
-        }
+        divEl.className = 'katex_box';
+        divEl.dataset.value = row;
+        _renderKatex(row, divEl);
         box.appendChild(divEl);
       });
     });
   }
+  // 加载预置公式
+  function renderKatexFormulaList() {
+    const tabBox = document.getElementById('tab');
+    const list = latex_data['formula'];
+    list.map((item, index) => {
+      // 创建tab列表
+      const childItem = document.createElement('div');
+      if (index === 0) childItem.classList.add('active');
+      childItem.dataset.key = index;
+      childItem.style.fontSize = '12px';
+      childItem.innerText = item.title;
+      _renderKatex(item.title, childItem);
+      tabBox.appendChild(childItem);
+      // 创建公式容器
+      const containerBox = document.getElementById('formula_box');
+      const containerItem = document.createElement('div');
+      containerItem.style.width = '100%';
+      containerItem.style.flexWrap = 'wrap';
+      containerItem.style.display = 'none';
+      containerItem.classList.add('formula_item');
+      if (index === 0) {
+        containerItem.classList.add('active');
+        containerItem.style.display = 'flex';
+      }
+      containerBox.appendChild(containerItem);
+
+      item.list.map((row, key) => {
+        if (row.title) {
+          var titleEl = document.createElement('div');
+          titleEl.className = 'title';
+          titleEl.innerHTML = row.title;
+          containerItem.appendChild(titleEl);
+        }
+        row.list.map((row2) => {
+          var divEl = document.createElement('div');
+          if (!row2.label) {
+            divEl.className = 'katex_box';
+            divEl.dataset.value = row2;
+            _renderKatex(row2, divEl);
+            // containerItem.appendChild(divEl);
+          } else {
+            divEl.style.width = '100%';
+            divEl.innerHTML = `<div style="color:#666;padding:10px;font-size:14px;">${row2.label}</div>`;
+            var divEl2 = document.createElement('span');
+            divEl2.className = 'katex_box';
+            divEl2.dataset.value = row2.value;
+            _renderKatex(row2.value, divEl2);
+            divEl.appendChild(divEl2);
+          }
+          containerItem.appendChild(divEl);
+        });
+      });
+    });
+    _tabChange();
+  }
+
   function _renderKatex(latex, element) {
     katex.render(latex, element, {
       throwOnError: false,
@@ -460,18 +515,21 @@
   function _tabChange() {
     document.querySelectorAll('.tab div').forEach((ele) => {
       ele.addEventListener('click', (e) => {
+        const key = e.currentTarget.dataset.key;
         document.querySelector('.tab .active').classList.remove('active');
         ele.classList.add('active');
-        document.querySelectorAll('.tab_value .item')[
-          e.target.dataset.key
-        ].style.display = 'flex';
-        document.querySelectorAll('.tab_value .item')[
-          1 - e.target.dataset.key
-        ].style.display = 'none';
+        document
+          .querySelectorAll('#formula_box .formula_item')
+          .forEach((e, k) => {
+            if (k == key) {
+              e.style.display = 'flex';
+            } else {
+              e.style.display = 'none';
+            }
+          });
       });
     });
   }
-  _tabChange();
   // 编辑器显示隐藏
   async function _renderEdit() {
     const root = jm;
@@ -547,12 +605,12 @@
   function showMoreTool() {
     const modal_more_btn = document.getElementById('modal_more_btn');
     modal_more_btn.addEventListener('click', () => {
-      if (modal_more_btn.innerText === '更多功能') {
+      if (modal_more_btn.innerText === '插入公式') {
         document.querySelector('.modal_hidden').style.display = 'flex';
-        modal_more_btn.innerText = '折叠功能';
+        modal_more_btn.innerText = '折叠';
       } else {
         document.querySelector('.modal_hidden').style.display = 'none';
-        modal_more_btn.innerText = '更多功能';
+        modal_more_btn.innerText = '插入公式';
       }
     });
   }
