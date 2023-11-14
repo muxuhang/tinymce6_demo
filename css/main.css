@@ -1,0 +1,4 @@
+.mce-content-body [contentEditable=false][data-mce-selected] {
+  cursor: default;
+  outline: 1px solid #b4d7ff;
+}

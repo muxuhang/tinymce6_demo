@@ -153,7 +153,7 @@
         border-bottom-color: rgb(25, 118, 210);
       }
       .tab_value {
-        height: 440px;
+        height: 236px;
         overflow-y: auto;
       }
       .tab_value #symbol_box,
@@ -197,20 +197,19 @@
         resize: none;
         width: calc(100% - 20px);
         height: 90px;
-        margin-top: 10px;
         border: 1px solid #eee;
         border-radius: 3px;
         padding: 10px;
       }
       .katex_input_box button {
         width: 120px;
-        margin-top: 10px;
         margin-left: 10px;
       }
       #katex_preview {
         width: calc(100% - 20px);
-        height: 90px;
+        height: 94px;
         padding: 10px;
+        font-size: 16px;
         margin-top: 10px;
         border: 1px solid #eee;
         border-radius: 3px;
@@ -220,8 +219,10 @@
         justify-content: center;
         overflow: auto;
       }
+      textarea:focus-visible {
+        outline: none;
+      }
       #katex_preview .katex {
-        font-size: 24px;
         font: Verdana, Arial, Helvetica, sans-serif !important;
       }
       .insert_button {
@@ -276,7 +277,19 @@
         padding: 8px 15px;
         max-width: 390px;
         max-height: 400px;
-        font-size: 24px;
+      }
+      .modal_hidden {
+        display: none;
+      }
+      .modal_more {
+        text-align: center;
+        font-size: 14px;
+        color: #666;
+        margin-right: 20px;
+        /* padding-bottom: 15px; */
+      }
+      .modal_more #modal_more_btn {
+        cursor: pointer;
       }
     </style>
   </head>
@@ -293,7 +306,19 @@
           </div>
           <div class="modal_content">
             <div class="content_left">
-              <div id="edit_input" class="richtext">1234</div>
+              <div id="edit_input" class="richtext"></div>
+            </div>
+            <div class="content_right">
+              <div class="tab_value">
+                <div class="item" id="symbol_box"></div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="modal_content modal_hidden"
+            style="margin-top: 0; padding-top: 0"
+          >
+            <div class="content_left">
               <div class="katex_input_box">
                 <textarea id="katex_input" placeholder="输入公式"></textarea>
                 <button class="insert_button" id="insert_button">
@@ -306,17 +331,15 @@
               </div>
             </div>
             <div class="content_right">
-              <div class="tab">
-                <div data-key="0" class="active">常用符号</div>
-                <div data-key="1">公式</div>
-              </div>
               <div class="tab_value">
-                <div class="item" id="symbol_box"></div>
-                <div class="item" id="formula_box" style="display: none"></div>
+                <div class="item" id="formula_box"></div>
               </div>
             </div>
           </div>
           <div class="modal_footer">
+            <div class="modal_more">
+              <div id="modal_more_btn">更多功能</div>
+            </div>
             <div>
               <a href="https://katex.org/docs/supported.html" target="_blank"
                 >了解如何使用latex</a
@@ -332,7 +355,7 @@
   </body>
 </html>
 <script src="./js/tinymce/tinymce.min.js"></script>
-<script src="./utils/latex_data.js"></script>
+<script src="./utils/latex_data2.js"></script>
 <script src="./js/html2canvas.min.js"></script>
 <script type="text/javascript">
   var options = {
@@ -358,11 +381,13 @@
       menubar: false,
       cleanup: false,
       convert_urls: false,
-      content_css: '/css/katex.css',
+      noneditable_class: 'katex',
+      content_css: '/css/katex.css,/css/main.css',
       extended_valid_elements: '*[.*]',
       valid_elements: '*[.*]', //删除清除规则
       toolbar: false,
-      content_style: 'p,div{margin:0;padding:0;border:0;font-size:24px}', //设置编辑器样式
+      content_style:
+        'p,div{margin:0;padding:0;border:0;};.katex:{font-size:24px}', //设置编辑器样式
     });
   }
   function renderJsMind() {
@@ -409,18 +434,24 @@
     const values = document.querySelectorAll('.tab_value .katex_box');
     values.forEach((ele) => {
       ele.addEventListener('click', (e) => {
-        const katex_input = document.getElementById('katex_input');
-        const before_text = katex_input.value.substring(
-          0,
-          katex_input.selectionStart
-        );
-        const after_text = katex_input.value.substring(
-          katex_input.selectionEnd
-        );
-        katex_input.value =
-          before_text + e.currentTarget.dataset.value + after_text;
-
-        _previewChange(katex_input.value);
+        // 如果是公式，放入latex编辑器,如果是符号，直接插入主编辑器
+        if (ele.parentElement.getAttribute('id') === 'symbol_box') {
+          const inputDom = tinymce.get('edit_input');
+          const katex_preview = ele.innerHTML;
+          inputDom.insertContent(katex_preview);
+        } else {
+          const katex_input = document.getElementById('katex_input');
+          const before_text = katex_input.value.substring(
+            0,
+            katex_input.selectionStart
+          );
+          const after_text = katex_input.value.substring(
+            katex_input.selectionEnd
+          );
+          katex_input.value =
+            before_text + e.currentTarget.dataset.value + after_text;
+          _previewChange(katex_input.value);
+        }
       });
     });
   }
@@ -488,46 +519,16 @@
       const katex_input = document.getElementById('katex_input');
       const katex_preview = document.querySelector('#katex_preview');
       if (!katex_preview) return;
-      const useImage = false;
       const inputDom = tinymce.get('edit_input');
       const range = inputDom.selection.getRng();
-      if (useImage) {
-        const imgUrl = await saveLatexToImage(katex_preview);
-        const img = document.createElement('img');
-        img.src = imgUrl;
-        img.style.verticalAlign = 'middle';
-        range.insertNode(img);
-      } else {
-        await range.insertNode(katex_preview.querySelector('.katex'));
-      }
+      katex_preview.querySelector('.katex').classList.add('katex_formula');
+      inputDom.insertContent(katex_preview.querySelector('.katex').outerHTML);
       katex_input.value = '';
+
       katex_preview.innerHTML = '<div>公式预览</div>';
     });
   }
-  insert_button();
-  async function saveLatexToImage(dom) {
-    return html2canvas(dom, {
-      backgroundColor: null,
-      logging: true,
-    }).then((canvas) => {
-      const oldCanvas = document.getElementById('read_canvas');
-      if (oldCanvas) {
-        oldCanvas.parentElement.removeChild(oldCanvas);
-      }
-      canvas.id = 'read_canvas';
-      document.body.appendChild(canvas);
-      const oldImage = document.getElementById('read_image');
-      if (oldImage) {
-        oldImage.parentElement.removeChild(oldImage);
-      }
-      var ctx = canvas.getContext('2d');
-      var image = new Image();
-      image.src = canvas.toDataURL('image/png');
-      image.id = 'read_image';
-      return image.src;
-    });
-  }
-  // 保存公式
+  insert_button(); // 保存公式
   function saveMathType() {
     const save_button = document.getElementById('save_button');
     save_button.addEventListener('click', () => {
@@ -543,8 +544,21 @@
   }
   saveMathType();
 
-  // 展示
+  function showMoreTool() {
+    const modal_more_btn = document.getElementById('modal_more_btn');
+    modal_more_btn.addEventListener('click', () => {
+      if (modal_more_btn.innerText === '更多功能') {
+        document.querySelector('.modal_hidden').style.display = 'flex';
+        modal_more_btn.innerText = '折叠功能';
+      } else {
+        document.querySelector('.modal_hidden').style.display = 'none';
+        modal_more_btn.innerText = '更多功能';
+      }
+    });
+  }
+  showMoreTool();
 
+  // 展示
   function showJsMindItem() {
     const root = jm;
     const jsmind_view = document.getElementById('jsmind_view');
