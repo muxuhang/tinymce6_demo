@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- jsmind -->
+    <link
+      type="text/css"
+      rel="stylesheet"
+      href="https://unpkg.com/jsmind@0.7.5/style/jsmind.css"
+    />
+    <script
+      type="text/javascript"
+      src="https://unpkg.com/jsmind@0.7.5/es6/jsmind.js"
+    ></script>
+    <script
+      type="text/javascript"
+      src="https://unpkg.com/jsmind@0.7.5/es6/jsmind.draggable-node.js"
+    ></script>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+      }
+      .container {
+        position: relative;
+        height: 100vh;
+        width: 100vw;
+        overflow: hidden;
+      }
+      body {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+      }
+      #jsmind_container {
+        height: 100%;
+        width: 100%;
+      }
+      /* 弹窗 */
+      .edit_modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100vh;
+        width: 100vw;
+        z-index: 1000;
+        /* background-color: rgba(0, 0, 0, 0.2); */
+      }
+      .modal_back {
+        position: absolute;
+        z-index: 0;
+        height: 100%;
+        width: 100%;
+        background-color: rgba(0, 0, 0, 0.2);
+      }
+      .modal {
+        position: absolute;
+        z-index: 1;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        background-color: #fff;
+        box-shadow: 1px 1px 2px 3px rgba(0, 0, 0, 0.1);
+        border-radius: 3px;
+      }
+      .modal_header {
+        padding: 15px;
+        border-bottom: 1px solid #eee;
+        display: flex;
+      }
+      .modal_header div:nth-child(1) {
+        flex: 1;
+      }
+      .modal_header .modal_close {
+        box-sizing: border-box;
+        position: relative;
+        display: block;
+        width: 22px;
+        height: 22px;
+        border: 2px solid transparent;
+        border-radius: 40px;
+        cursor: pointer;
+      }
+      .modal_header .modal_close::after,
+      .modal_header .modal_close::before {
+        content: '';
+        display: block;
+        box-sizing: border-box;
+        position: absolute;
+        width: 16px;
+        height: 2px;
+        background: currentColor;
+        transform: rotate(45deg);
+        border-radius: 5px;
+        top: 8px;
+        left: 1px;
+      }
+      .modal_header .modal_close::after {
+        transform: rotate(-45deg);
+      }
+      .modal_content {
+        overflow: hidden;
+      }
+      .modal_content .tox-tinymce {
+        border: none;
+        border-radius: 0 !important;
+        width: 400px;
+        box-shadow: none;
+      }
+      .tox-tinymce .tox-editor-container {
+        height: 100% !important;
+      }
+      .tox-tinymce .tox-statusbar {
+        display: none !important;
+      }
+      .modal_footer {
+        padding: 15px;
+        display: flex;
+        border-top: 1px solid #eee;
+      }
+      .modal_footer a {
+        color: rgb(25, 118, 210);
+        font-size: 14px;
+        text-decoration: none;
+      }
+      .modal_footer button {
+        margin-left: 10px;
+        padding: 4px 10px;
+        background-color: #fff;
+        border: 1px solid #eee;
+        border-radius: 3px;
+        cursor: pointer;
+      }
+      .modal_footer .save_button {
+        padding: 4px 10px;
+        color: #fff;
+        background-color: rgb(25, 118, 210);
+        border: 1px solid rgb(25, 118, 210);
+        border-radius: 3px;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div id="jsmind_container"></div>
+      <div id="edit_modal" class="edit_modal">
+        <div class="modal_back modal_close"></div>
+        <div class="modal">
+          <div class="modal_header">
+            <div>编辑</div>
+            <div class="modal_close"></div>
+          </div>
+          <div class="modal_content">
+            <div id="edit_input" class="richtext"></div>
+          </div>
+          <div class="modal_footer">
+            <div style="flex: 1"></div>
+            <button class="modal_close">取消</button>
+            <button class="save_button" id="save_button">保存</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
+<script src="./js/tinymce/tinymce.min.js"></script>
+<script type="text/javascript">
+  var options = {
+    container: 'jsmind_container',
+    editable: true,
+    theme: 'orange',
+    support_html: true,
+  };
+  var jm;
+  window.onload = function () {
+    // 加载编辑器,
+    renderTinymce();
+    renderJsMind();
+    saveMathType();
+  };
+  function renderTinymce() {
+    tinymce.init({
+      selector: '#edit_input',
+      height: 240,
+      menubar: false,
+      cleanup: false,
+      convert_urls: false,
+      content_css: '/css/katex.css',
+      extended_valid_elements: '*[.*]',
+      content_css: 'dark', //公式为图片,颜色为白色，选择黑色风格
+      external_plugins: {
+        tiny_mce_wiris: '../mathtype-tinymce6/plugin.min.js', //加载插件路径，使用与tinymce.min.js的相对路径或使用绝对路径
+      },
+      extended_valid_elements: '*[.*]',
+      toolbar:
+        'tiny_mce_wiris_formulaEditor tiny_mce_wiris_formulaEditorChemistry', //菜单栏使用数学公式和化学公式,若使用其他功能，参考index.html
+      mathTypeParameters: {
+        editorParameters: {
+          //这里设置公式编辑器的字体大小、颜色和背景
+          fontSize: '24px',
+          color: '#fff',
+          backgroundColor: '#333',
+        },
+      },
+      content_style: 'p,div{margin:0;padding:0;border:0;font-size:24px}', //设置编辑器样式
+    });
+  }
+  function renderJsMind() {
+    jm = new jsMind(options);
+    jm.show();
+    _renderEdit();
+  }
+  // 编辑器显示隐藏
+  async function _renderEdit() {
+    const root = jm;
+    const modal = document.getElementById('edit_modal');
+    root.view.e_nodes.addEventListener('dblclick', (ele) => {
+      const selected = root.get_selected_node();
+      if (selected) {
+        modal.style.display = 'block';
+        const inputDom = tinymce.get('edit_input');
+        inputDom.resetContent(selected.topic);
+      }
+    });
+    const closeBtn = document.querySelectorAll('#edit_modal .modal_close');
+    closeBtn &&
+      closeBtn.forEach((el) => {
+        el.addEventListener('click', () => {
+          modal.style.display = 'none';
+        });
+      });
+  }
+
+  // 保存公式
+  function saveMathType() {
+    const save_button = document.getElementById('save_button');
+    save_button.addEventListener('click', () => {
+      let msg = tinymce.get('edit_input').getBody().innerHTML;
+      const node = jm.get_selected_node();
+      const val = document.createElement('div');
+      val.innerHTML = msg;
+      if (node) {
+        jm.update_node(node.id, msg);
+      }
+
+      document.getElementById('edit_modal').style.display = 'none';
+    });
+  }
+</script>
