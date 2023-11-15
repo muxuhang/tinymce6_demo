@@ -25,12 +25,6 @@
     <!-- katex -->
     <link rel="stylesheet" href="./css/katex.css" />
     <script src="./js/katex.js"></script>
-    <!-- <script
-      defer
-      src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
-      integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05"
-      crossorigin="anonymous"
-    ></script> -->
     <style>
       * {
         margin: 0;
@@ -61,7 +55,6 @@
         height: 100vh;
         width: 100vw;
         z-index: 1000;
-        /* background-color: rgba(0, 0, 0, 0.2); */
       }
       .modal_back {
         position: absolute;
@@ -297,7 +290,6 @@
         margin-top: 10px;
         border: 1px solid #eee;
         line-height: 26px;
-        /* padding-bottom: 15px; */
       }
       .modal_more #modal_more_btn {
         height: 100%;
@@ -309,6 +301,7 @@
     <div class="container">
       <div id="jsmind_container"></div>
       <div id="jsmind_view"></div>
+      <!-- 编辑器部分 -->
       <div id="edit_modal" class="edit_modal">
         <div class="modal_back modal_close"></div>
         <div class="modal">
@@ -368,12 +361,12 @@
           </div>
         </div>
       </div>
+      <!-- end -->
     </div>
   </body>
 </html>
 <script src="./js/tinymce/tinymce.min.js"></script>
 <script src="./utils/latex_data2.js"></script>
-<script src="./js/html2canvas.min.js"></script>
 <script type="text/javascript">
   var options = {
     container: 'jsmind_container',
@@ -382,15 +375,21 @@
     support_html: true,
   };
   var jm;
-  var editor, hand;
   window.onload = function () {
-    // 加载编辑器,
     renderTinymce();
     renderJsMind();
     renderKatexList();
     renderKatexFormulaList();
     _addEditKatex();
   };
+  function renderJsMind() {
+    jm = new jsMind(options);
+    jm.show();
+    _renderEdit();
+    showJsMindItem();
+  }
+
+  // 加载tinymce编辑器
   function renderTinymce() {
     tinymce.init({
       selector: '#edit_input',
@@ -399,20 +398,15 @@
       cleanup: false,
       convert_urls: false,
       noneditable_class: 'katex',
-      content_css: '/css/katex.css,/css/main.css',
-      extended_valid_elements: '*[.*]',
-      valid_elements: '*[.*]', //删除清除规则
+      content_css: '/css/katex.css,/css/content.css', //Tips
+      // extended_valid_elements: '*[.*]',
+      valid_elements: '*[.*]',
       toolbar: 'undo redo | bold italic underline | aligncenter indent outdent',
       content_style:
         'p,div{margin:0;padding:0;border:0;};.katex:{font-size:24px}', //设置编辑器样式
     });
   }
-  function renderJsMind() {
-    jm = new jsMind(options);
-    jm.show();
-    _renderEdit();
-    showJsMindItem();
-  }
+
   // 加载预置符号
   function renderKatexList() {
     const tabKey = 'symbol';
@@ -493,7 +487,9 @@
       throwOnError: false,
     });
   }
-  // 点击预置公式
+
+  /*  */
+  // 点击预置公式或符号
   function _addEditKatex() {
     const values = document.querySelectorAll('.tab_value .katex_box');
     values.forEach((ele) => {
@@ -539,7 +535,8 @@
       });
     });
   }
-  // 编辑器显示隐藏
+
+  // 编辑器弹窗显示隐藏
   async function _renderEdit() {
     const root = jm;
     const modal = document.getElementById('edit_modal');
@@ -575,6 +572,8 @@
     });
   }
   _editKatex();
+
+  // 公式预览 latex转换
   function _previewChange(value) {
     const katex_preview = document.getElementById('katex_preview');
     _renderKatex(value, katex_preview);
@@ -595,7 +594,9 @@
       katex_preview.innerHTML = '<div>公式预览</div>';
     });
   }
-  insert_button(); // 保存公式
+  insert_button();
+
+  // 保存公式
   function saveMathType() {
     const save_button = document.getElementById('save_button');
     save_button.addEventListener('click', () => {
@@ -611,6 +612,7 @@
   }
   saveMathType();
 
+  // 展示折叠插入公式部分
   function showMoreTool() {
     const modal_more_btn = document.getElementById('modal_more_btn');
     modal_more_btn.addEventListener('click', () => {
@@ -655,3 +657,4 @@
 <!-- 公式参考网站 -->
 <!-- https://latex.91maths.com/eg/dxdaishu.html -->
 <!-- https://blog.csdn.net/gsww404/article/details/78684278 -->
+<!-- https://www.cnblogs.com/liaohuiqiang/p/9671302.html -->
