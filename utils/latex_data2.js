@@ -1,9 +1,56 @@
+// 针对jsmind.html的拓展
 // 1、符号
 // 2、公式
 const latex_data = {
   'symbol': [
     {
-      title: "符号", list: [
+      title: "几何", list: [
+        '\\therefore',
+        '\\because',
+        '\\partial',
+        '\\alpha',
+        '\\beta',
+        '\\gamma',
+        // '\\epsilon{}',
+        '\\pi',
+        '\\times',
+        '\\bigcap',
+        '\\cap',
+        '\\Delta',
+        '\\geq',
+        '\\leq',
+        '\\pm',
+        '\\Leftarrow',
+        '\\Rightarrow',
+        '\\exists',
+        '\\triangle',
+        '\\varnothing',
+        '\\infty',
+        '\\in',
+        // '\\Theta{}',
+        '\\div',
+        '\\forall',
+        '\\approx',
+        // '\\begin{pmatrix}\\end{pmatrix}',
+        '\\theta',
+        '\\Leftrightarrow',
+        '\\lambda',
+        '\\varphi',
+        '\\perp',
+        '\\notin',
+        '\\subset',
+        '\\parallel',
+        '\\angle',
+        '\\subseteq',
+        '\\sigma',
+        '\\wedge',
+        '\\vee',
+        '\\neq',
+        '\\cdot'
+      ]
+    },
+    {
+      title: "代数", list: [
         '\\therefore',
         '\\because',
         '\\partial',
@@ -100,30 +147,30 @@ const latex_data = {
             }
           ]
         },
-        {
-          title: '化学', list: [
-            {
-              "value": "2Al + 3{H_2}S{O_4} = A{l_2}{(S{O_4})_3} + 3{H_2} \\uparrow",
-              "label": "铝和稀硫酸"
-            },
-            {
-              "value": "2Al + 6HCl = 2AlC{l_3} + 3{H_2} \\uparrow",
-              "label": "铝和稀盐酸"
-            },
-            {
-              "value": "Mg + {H_2}S{O_4} = MgS{O_4} + {H_2} \\uparrow",
-              "label": "镁和稀硫酸"
-            },
-            {
-              "value": "Fe + {H_2}S{O_4} = FeS{O_4} + {H_2} \\uparrow",
-              "label": "铁和稀硫酸"
-            },
-            {
-              "value": "Zn + 2HCl = ZnC{l_2} + {H_2} \\uparrow",
-              "label": "锌和稀盐酸"
-            }
-          ]
-        }
+        // {
+        //   title: '化学', list: [
+        //     {
+        //       "value": "2Al + 3{H_2}S{O_4} = A{l_2}{(S{O_4})_3} + 3{H_2} \\uparrow",
+        //       "label": "铝和稀硫酸"
+        //     },
+        //     {
+        //       "value": "2Al + 6HCl = 2AlC{l_3} + 3{H_2} \\uparrow",
+        //       "label": "铝和稀盐酸"
+        //     },
+        //     {
+        //       "value": "Mg + {H_2}S{O_4} = MgS{O_4} + {H_2} \\uparrow",
+        //       "label": "镁和稀硫酸"
+        //     },
+        //     {
+        //       "value": "Fe + {H_2}S{O_4} = FeS{O_4} + {H_2} \\uparrow",
+        //       "label": "铁和稀硫酸"
+        //     },
+        //     {
+        //       "value": "Zn + 2HCl = ZnC{l_2} + {H_2} \\uparrow",
+        //       "label": "锌和稀盐酸"
+        //     }
+        //   ]
+        // }
       ]
     },
     {

@@ -203,7 +203,7 @@
         display: block;
         resize: none;
         width: calc(100% - 20px);
-        height: 90px;
+        height: 110px;
         border: 1px solid #eee;
         border-radius: 3px;
         padding: 10px;
@@ -214,7 +214,7 @@
       }
       #katex_preview {
         width: calc(100% - 20px);
-        height: 94px;
+        height: 115px;
         padding: 10px;
         font-size: 16px;
         margin-top: 10px;
@@ -292,11 +292,15 @@
       .modal_more {
         text-align: center;
         font-size: 14px;
-        color: #666;
-        margin-right: 20px;
+        margin-left: 10px;
+        height: 26px;
+        margin-top: 10px;
+        border: 1px solid #eee;
+        line-height: 26px;
         /* padding-bottom: 15px; */
       }
       .modal_more #modal_more_btn {
+        height: 100%;
         cursor: pointer;
       }
     </style>
@@ -312,13 +316,18 @@
             <div>编辑</div>
             <div class="modal_close"></div>
           </div>
-          <div class="modal_content">
+          <div class="modal_content" style="padding-bottom: 10px">
             <div class="content_left">
               <div id="edit_input" class="richtext"></div>
             </div>
-            <div class="content_right">
-              <div class="tab_value">
-                <div class="item" id="symbol_box"></div>
+            <div>
+              <div class="content_right" style="height: 200px">
+                <div class="tab_value">
+                  <div class="item" id="symbol_box"></div>
+                </div>
+              </div>
+              <div class="modal_more">
+                <div id="modal_more_btn">插入数学公式</div>
               </div>
             </div>
           </div>
@@ -346,17 +355,16 @@
             </div>
           </div>
           <div class="modal_footer">
-            <div class="modal_more">
-              <div id="modal_more_btn">插入公式</div>
+            <div style="flex: 1">
+              <div>
+                <a href="https://katex.org/docs/supported.html" target="_blank"
+                  >了解如何使用latex</a
+                >
+              </div>
             </div>
-            <div>
-              <a href="https://katex.org/docs/supported.html" target="_blank"
-                >了解如何使用latex</a
-              >
-            </div>
-            <div style="flex: 1"></div>
             <button class="modal_close">取消</button>
             <button class="save_button" id="save_button">保存</button>
+            <div style="flex: 1"></div>
           </div>
         </div>
       </div>
@@ -606,12 +614,12 @@
   function showMoreTool() {
     const modal_more_btn = document.getElementById('modal_more_btn');
     modal_more_btn.addEventListener('click', () => {
-      if (modal_more_btn.innerText === '插入公式') {
+      if (modal_more_btn.innerText === '插入数学公式') {
         document.querySelector('.modal_hidden').style.display = 'flex';
-        modal_more_btn.innerText = '折叠';
+        modal_more_btn.innerText = '收起';
       } else {
         document.querySelector('.modal_hidden').style.display = 'none';
-        modal_more_btn.innerText = '插入公式';
+        modal_more_btn.innerText = '插入数学公式';
       }
     });
   }
@@ -644,3 +652,6 @@
     });
   }
 </script>
+<!-- 公式参考网站 -->
+<!-- https://latex.91maths.com/eg/dxdaishu.html -->
+<!-- https://blog.csdn.net/gsww404/article/details/78684278 -->
