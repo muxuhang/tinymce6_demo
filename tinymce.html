@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link type="text/css" rel="stylesheet" href="./css/tinymce_init.css" />
+    <link type="text/css" rel="stylesheet" href="./css/katex.css" />
+  </head>
+  <body>
+    <div class="tinymce_container">
+      <div class="katex_toolbar"></div>
+      <textarea class="tinymce_textarea"></textarea>
+    </div>
+    <div class="tinymce_container" style="margin-top: 20px">
+      <div class="katex_toolbar"></div>
+      <textarea class="tinymce_textarea"></textarea>
+    </div>
+    <div id="edit_modal" class="edit_modal">
+      <div class="modal_back modal_close"></div>
+      <div class="modal">
+        <div class="modal_header">
+          <div>编辑</div>
+          <div class="modal_close"></div>
+        </div>
+        <div class="modal_content modal_hidden">
+          <div class="content_left">
+            <div class="katex_input_box">
+              <textarea id="katex_input" placeholder="输入公式"></textarea>
+            </div>
+            <div id="katex_preview">
+              <div>公式预览</div>
+            </div>
+          </div>
+          <div class="content_right">
+            <div id="tab" class="tab"></div>
+            <div class="tab_value">
+              <div class="item" id="formula_box"></div>
+            </div>
+          </div>
+        </div>
+        <div class="modal_footer">
+          <div style="flex: 1">
+            <div>
+              <a href="https://katex.org/docs/supported.html" target="_blank"
+                >了解如何使用latex</a
+              >
+            </div>
+          </div>
+          <button class="modal_close">取消</button>
+          <button class="save_button" id="save_button">保存</button>
+          <div style="flex: 1"></div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
+<script src="./js/tinymce/tinymce.min.js"></script>
+<script src="./utils/latex_data2.js"></script>
+<script src="./js/katex.js"></script>
+<script src="./js/tinymce_init.js"></script>
+<script>
+  window.onload = function () {
+    createKatexEdit();
+  };
+</script>

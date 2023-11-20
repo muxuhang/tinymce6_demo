@@ -1,0 +1,281 @@
+/* 编辑器样式 */
+.tinymce_container {
+  border: 1px solid #eee;
+  border-radius: 3px !important;
+  overflow: hidden;
+}
+
+.tox-tinymce {
+  border: none !important;
+  box-shadow: none;
+}
+
+.tox-tinymce .tox-editor-container {
+  height: 100% !important;
+}
+
+.tox-tinymce .tox-statusbar {
+  display: none !important;
+}
+
+textarea:focus-visible {
+  outline: none;
+}
+
+.katex_toolbar {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  overflow: hidden;
+  border-bottom: 1px solid #eee;
+}
+
+.katex_toolbar .toolbar_container {
+  flex: 1;
+  position: relative;
+  overflow-x: auto;
+}
+
+.katex_toolbar .toolbar_container .toolbar_list {
+  display: flex;
+  width: fit-content;
+}
+
+.katex_toolbar .toolbar_container .toolbar_item {
+  width: 24px;
+  height: 24px;
+  padding: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.katex_toolbar .toolbar_container .toolbar_item:hover,
+.more_formula:hover {
+  background: #cce2fa;
+}
+
+.katex_toolbar .more_formula {
+  font-size: 14px;
+  cursor: pointer;
+  padding: 0 10px;
+  line-height: 26px;
+  border-left: 1px solid #eee;
+}
+
+
+
+/* 弹窗 */
+.edit_modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 100vw;
+  z-index: 1000;
+}
+
+.modal_back {
+  position: absolute;
+  z-index: 0;
+  height: 100%;
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
+.modal {
+  position: absolute;
+  z-index: 1;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #fff;
+  box-shadow: 1px 1px 2px 3px rgba(0, 0, 0, 0.1);
+  border-radius: 3px;
+}
+
+.modal_header {
+  padding: 15px;
+  border-bottom: 1px solid #eee;
+  display: flex;
+}
+
+.modal_header div:nth-child(1) {
+  flex: 1;
+}
+
+.modal_header .modal_close {
+  box-sizing: border-box;
+  position: relative;
+  display: block;
+  width: 22px;
+  height: 22px;
+  border: 2px solid transparent;
+  border-radius: 40px;
+  cursor: pointer;
+}
+
+.modal_header .modal_close::after,
+.modal_header .modal_close::before {
+  content: '';
+  display: block;
+  box-sizing: border-box;
+  position: absolute;
+  width: 16px;
+  height: 2px;
+  background: currentColor;
+  transform: rotate(45deg);
+  border-radius: 5px;
+  top: 8px;
+  left: 1px;
+}
+
+.modal_header .modal_close::after {
+  transform: rotate(-45deg);
+}
+
+.modal_content {
+  padding: 15px;
+  overflow: hidden;
+}
+
+.modal_content {
+  display: flex;
+  flex-direction: row;
+}
+
+.modal_content .content_left {
+  flex: 1;
+  width: 400px;
+}
+
+.modal_content .content_right {
+  width: 300px;
+  border: 1px solid #eee;
+  margin-left: 10px;
+  border-radius: 3px;
+  display: flex;
+  flex-direction: column;
+}
+
+.modal_content .content_right .tab {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal_content .content_right .tab div {
+  font-size: 14px;
+  flex: 1;
+  text-align: center;
+  line-height: 36px;
+  border-bottom: 1px solid #eee;
+  cursor: pointer;
+}
+
+.modal_content .content_right .tab .active {
+  font-weight: bold;
+  color: rgb(25, 118, 210);
+  border-bottom-color: rgb(25, 118, 210);
+}
+
+.tab_value {
+  height: 236px;
+  overflow-y: auto;
+}
+
+.tab_value #symbol_box,
+.tab_value #formula_box {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.formula_box .active {
+  display: flex;
+}
+
+.formula_box div {
+  flex-wrap: wrap;
+}
+
+.tab_value .title {
+  font-size: 14px;
+  padding: 10px;
+  width: 100%;
+  font-weight: bold;
+  border-bottom: 1px solid #eee;
+}
+
+.tab_value .katex_box {
+  font-size: 14px;
+  padding: 5px;
+  margin: 5px;
+  cursor: pointer;
+}
+.katex_input_box {
+  display: flex;
+}
+.katex_input_box #katex_input {
+  display: block;
+  resize: none;
+  width: calc(100% - 20px);
+  height: 110px;
+  border: 1px solid #eee;
+  border-radius: 3px;
+  padding: 10px;
+}
+.katex_input_box button {
+  width: 120px;
+  margin-left: 10px;
+}
+#katex_preview {
+  width: calc(100% - 20px);
+  height: 115px;
+  padding: 10px;
+  font-size: 16px;
+  margin-top: 10px;
+  border: 1px solid #eee;
+  border-radius: 3px;
+  display: flex;
+  text-align: center;
+  align-items: center;
+  justify-content: center;
+  overflow: auto;
+}
+textarea:focus-visible {
+  outline: none;
+}
+#katex_preview .katex {
+  font: Verdana, Arial, Helvetica, sans-serif !important;
+}
+.modal_footer {
+  padding: 15px;
+  display: flex;
+  align-items: center;
+  border-top: 1px solid #eee;
+}
+.modal_footer a {
+  color: rgb(25, 118, 210);
+  font-size: 14px;
+  text-decoration: none;
+}
+.modal_footer button {
+  margin-left: 10px;
+  padding: 4px 10px;
+  background-color: #fff;
+  border: 1px solid #eee;
+  border-radius: 3px;
+  cursor: pointer;
+}
+.modal_footer .save_button {
+  padding: 4px 10px;
+  color: #fff;
+  background-color: rgb(25, 118, 210);
+  border: 1px solid rgb(25, 118, 210);
+  border-radius: 3px;
+  cursor: pointer;
+}

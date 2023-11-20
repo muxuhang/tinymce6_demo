@@ -304,6 +304,45 @@ const latex_data = {
   ]
 }
 
-function renderLatex() {
 
-}
+const toolbar_data = [
+  '\\therefore',
+  '\\because',
+  '\\partial',
+  '\\alpha',
+  '\\beta',
+  '\\gamma',
+  '\\pi',
+  '\\times',
+  '\\bigcap',
+  '\\cap',
+  '\\Delta',
+  '\\geq',
+  '\\leq',
+  '\\pm',
+  '\\Leftarrow',
+  '\\Rightarrow',
+  '\\exists',
+  '\\triangle',
+  '\\varnothing',
+  '\\infty',
+  '\\in',
+  '\\div',
+  '\\forall',
+  '\\approx',
+  '\\theta',
+  '\\Leftrightarrow',
+  '\\lambda',
+  '\\varphi',
+  '\\perp',
+  '\\notin',
+  '\\subset',
+  '\\parallel',
+  '\\angle',
+  '\\subseteq',
+  '\\sigma',
+  '\\wedge',
+  '\\vee',
+  '\\neq',
+  '\\cdot'
+]
