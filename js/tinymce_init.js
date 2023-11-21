@@ -49,7 +49,7 @@ function _renderKatex(latex, element) {
   });
 }
 // 直接插入公式
-function insert_button(className, activeEditor) {
+function insert_button() {
   const buttons = document.querySelectorAll('.katex_toolbar .toolbar_item');
   buttons.forEach((button) => {
     button.addEventListener('click', async (ele) => {
@@ -75,12 +75,11 @@ async function _renderEdit() {
     });
   })
   const closeBtn = document.querySelectorAll('.modal_close');
-  closeBtn &&
-    closeBtn.forEach((el) => {
-      el.addEventListener('click', () => {
-        modal.style.display = 'none';
-      });
+  closeBtn && closeBtn.forEach((el) => {
+    el.addEventListener('click', () => {
+      modal.style.display = 'none';
     });
+  });
 }
 // 加载预置公式
 function renderKatexFormulaList() {
@@ -210,6 +209,30 @@ function saveMathType(activeEditor) {
   });
 }
 
+function katexButton() {
+  const katex_text = document.querySelectorAll('#tinymce .katex')
+  console.log(katex_text);
+  katex_text.forEach((ele) => {
+    ele.addEventListener('click', () => {
+      console.log('点击');
+    })
+  })
+}
+
+// 根据输入框位置调整公式栏位置
+function fixedToolBar() {
+  document.querySelectorAll('.tinymce_container').forEach((ele) => {
+    ele.addEventListener('mouseover', () => {
+      if (ele.getBoundingClientRect().y < 20) {
+        const katex_toolbar = ele.querySelector('.katex_toolbar')
+        katex_toolbar.style.top = 'auto'
+        katex_toolbar.style.bottom = '-30px'
+      }
+    })
+  })
+}
+
+
 
 // 创建编辑器
 function createKatexEdit(props = {}) {
@@ -219,9 +242,11 @@ function createKatexEdit(props = {}) {
   const className = '.tinymce_textarea'
   renderTinymce(className)
   useToolbar && renderKatexToolbar(className)
-  useToolbar && insert_button(className)
+  useToolbar && insert_button()
   useToolbar && renderKatexFormulaList()
   useToolbar && _editKatex()
   useToolbar && _addEditKatex()
   useToolbar && _renderEdit()
+  useToolbar && katexButton()
+  useToolbar && fixedToolBar()
 }

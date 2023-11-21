@@ -2,7 +2,6 @@
 .tinymce_container {
   border: 1px solid #eee;
   border-radius: 3px !important;
-  overflow: hidden;
 }
 
 .tox-tinymce {
@@ -216,9 +215,11 @@ textarea:focus-visible {
   margin: 5px;
   cursor: pointer;
 }
+
 .katex_input_box {
   display: flex;
 }
+
 .katex_input_box #katex_input {
   display: block;
   resize: none;
@@ -228,10 +229,12 @@ textarea:focus-visible {
   border-radius: 3px;
   padding: 10px;
 }
+
 .katex_input_box button {
   width: 120px;
   margin-left: 10px;
 }
+
 #katex_preview {
   width: calc(100% - 20px);
   height: 115px;
@@ -246,23 +249,28 @@ textarea:focus-visible {
   justify-content: center;
   overflow: auto;
 }
+
 textarea:focus-visible {
   outline: none;
 }
+
 #katex_preview .katex {
   font: Verdana, Arial, Helvetica, sans-serif !important;
 }
+
 .modal_footer {
   padding: 15px;
   display: flex;
   align-items: center;
   border-top: 1px solid #eee;
 }
+
 .modal_footer a {
   color: rgb(25, 118, 210);
   font-size: 14px;
   text-decoration: none;
 }
+
 .modal_footer button {
   margin-left: 10px;
   padding: 4px 10px;
@@ -271,6 +279,7 @@ textarea:focus-visible {
   border-radius: 3px;
   cursor: pointer;
 }
+
 .modal_footer .save_button {
   padding: 4px 10px;
   color: #fff;
@@ -278,4 +287,24 @@ textarea:focus-visible {
   border: 1px solid rgb(25, 118, 210);
   border-radius: 3px;
   cursor: pointer;
+}
+
+/* 2023/11/21新增 */
+.tinymce_container {
+  position: relative;
+}
+
+.tinymce_container .katex_toolbar {
+  background-color: #fff;
+  border: 1px solid #eee;
+  display: none;
+}
+
+.tinymce_container:hover .katex_toolbar {
+  display: flex;
+  position: absolute;
+  width: 100%;
+  top: -30px;
+  left: 0;
+  z-index: 300;
 }
