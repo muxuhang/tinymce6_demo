@@ -13,6 +13,12 @@ function renderTinymce(className) {
     toolbar: 'undo redo | bold italic underline | aligncenter indent outdent',
     content_style:
       'p,div{margin:0;padding:0;border:0;};.katex:{font-size:24px}',
+    setup: (edit) => {
+      edit.on('focus', (e) => {
+        hiddenKatexToolbar()
+        setKatexPosition(edit.container.parentElement)
+      })
+    }
   });
 }
 // 加载katex工具栏
@@ -56,6 +62,7 @@ function insert_button() {
       let msg = ele.currentTarget.innerHTML
       const selId = button.parentElement.parentElement.parentElement.parentElement.querySelector('textarea').getAttribute('id')
       const activeEditor = tinymce.get(selId)
+      console.log(activeEditor);
       activeEditor.insertContent(msg)
     });
   })
@@ -206,32 +213,48 @@ function saveMathType(activeEditor) {
     const msg = document.getElementById('katex_preview').innerHTML
     activeEditor.insertContent(msg)
     document.getElementById('edit_modal').style.display = 'none';
-  });
-}
-
-function katexButton() {
-  const katex_text = document.querySelectorAll('#tinymce .katex')
-  console.log(katex_text);
-  katex_text.forEach((ele) => {
-    ele.addEventListener('click', () => {
-      console.log('点击');
-    })
-  })
+  }, { once: true });
 }
 
 // 根据输入框位置调整公式栏位置
 function fixedToolBar() {
-  document.querySelectorAll('.tinymce_container').forEach((ele) => {
-    ele.addEventListener('mouseover', () => {
-      if (ele.getBoundingClientRect().y < 20) {
-        const katex_toolbar = ele.querySelector('.katex_toolbar')
-        katex_toolbar.style.top = 'auto'
-        katex_toolbar.style.bottom = '-30px'
-      }
-    })
+  window.addEventListener('click', e => {
+    // console.log('window click');
+    // const edit = tinymce
+    // console.log(edit.selection.getRng());
+
   })
+  // document.querySelectorAll('.tinymce_container').forEach((ele) => {
+  //   ele.addEventListener('mouseover', () => {
+  //     setKatexPosition(ele)
+  //   })
+  // })
 }
 
+function setKatexPosition(ele, show = true) {
+  ele.classList.add('tinymce_container_active')
+  const katex_toolbar = ele.querySelector('.katex_toolbar')
+  katex_toolbar.style.display = show ? 'flex' : 'none'
+  if (ele.getBoundingClientRect().y < 20) {
+    katex_toolbar.style.top = 'auto'
+    katex_toolbar.style.bottom = '-30px'
+  }
+}
+
+document.documentElement.addEventListener("mouseup", (e) => {
+  if (!e.target.closest(".tinymce_container_active") && !e.target.closest('#edit_modal')) {
+    hiddenKatexToolbar()
+  }
+});
+
+function hiddenKatexToolbar() {
+  document.querySelectorAll(".tinymce_container_active .katex_toolbar").forEach(ele => {
+    ele.style.display = "none";
+  })
+  document.querySelectorAll(".tinymce_container_active").forEach(ele => {
+    ele.classList.remove('tinymce_container_active')
+  })
+}
 
 
 // 创建编辑器
@@ -247,6 +270,5 @@ function createKatexEdit(props = {}) {
   useToolbar && _editKatex()
   useToolbar && _addEditKatex()
   useToolbar && _renderEdit()
-  useToolbar && katexButton()
   useToolbar && fixedToolBar()
 }
