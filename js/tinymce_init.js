@@ -62,7 +62,6 @@ function insert_button() {
       let msg = ele.currentTarget.innerHTML
       const selId = button.parentElement.parentElement.parentElement.parentElement.querySelector('textarea').getAttribute('id')
       const activeEditor = tinymce.get(selId)
-      console.log(activeEditor);
       activeEditor.insertContent(msg)
     });
   })
@@ -211,8 +210,14 @@ function saveMathType(activeEditor) {
   const save_button = document.getElementById('save_button');
   save_button.addEventListener('click', () => {
     const msg = document.getElementById('katex_preview').innerHTML
+    if (document.getElementById('katex_preview').innerText == '公式预览') {
+      return
+    }
+    const input = document.getElementById('katex_input')
     activeEditor.insertContent(msg)
     document.getElementById('edit_modal').style.display = 'none';
+    input.value = ''
+    document.getElementById('katex_preview').innerHTML = '<div>公式预览</div>'
   }, { once: true });
 }
 
