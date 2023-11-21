@@ -242,7 +242,7 @@ function setKatexPosition(ele, show = true) {
 }
 
 document.documentElement.addEventListener("mouseup", (e) => {
-  if (!e.target.closest(".tinymce_container_active .tox-sidebar-wrap") && !e.target.closest('#edit_modal')) {
+  if (!e.target.closest(".tinymce_container_active") && !e.target.closest('#edit_modal')) {
     hiddenKatexToolbar()
   }
 });
