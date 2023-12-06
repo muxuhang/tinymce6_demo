@@ -84,7 +84,7 @@ textarea:focus-visible {
   background-color: rgba(0, 0, 0, 0.2);
 }
 
-.modal {
+.modal_box {
   position: absolute;
   z-index: 1;
   left: 50%;

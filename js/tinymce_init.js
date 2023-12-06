@@ -1,7 +1,7 @@
 
 // 前置js   katex.min.js, katex.css, content.css, latex_data.js
 // 加载tinymce编辑器
-function renderTinymce(className) {
+function renderTinymce(className, useToolbar) {
   tinymce.init({
     selector: className,
     height: 240,
@@ -14,10 +14,12 @@ function renderTinymce(className) {
     content_style:
       'p,div{margin:0;padding:0;border:0;};.katex:{font-size:24px}',
     setup: (edit) => {
-      edit.on('focus', (e) => {
-        hiddenKatexToolbar()
-        setKatexPosition(edit.container.parentElement)
-      })
+      if (useToolbar) {
+        edit.on('focus', (e) => {
+          hiddenKatexToolbar()
+          setKatexPosition(edit.editorContainer.parentElement)
+        })
+      }
     }
   });
 }
@@ -52,6 +54,7 @@ function renderMoreFormula(toolbar) {
 function _renderKatex(latex, element) {
   katex.render(latex, element, {
     throwOnError: false,
+    output:'html'
   });
 }
 // 直接插入公式
@@ -59,14 +62,17 @@ function insert_button() {
   const buttons = document.querySelectorAll('.katex_toolbar .toolbar_item');
   buttons.forEach((button) => {
     button.addEventListener('click', async (ele) => {
-      let msg = ele.currentTarget.innerHTML
+      const span = document.createElement('span')
+      span.innerHTML = ele.currentTarget.dataset.value
+      span.className = 'latex_span'
+      const msg = span.outerHTML
+      // const msg = ele.currentTarget.innerHTML
       const selId = button.parentElement.parentElement.parentElement.parentElement.querySelector('textarea').getAttribute('id')
       const activeEditor = tinymce.get(selId)
       activeEditor.insertContent(msg)
     });
   })
 }
-
 // -------------------弹窗---------------------- //
 // 编辑器弹窗显示隐藏
 async function _renderEdit() {
@@ -98,7 +104,7 @@ function renderKatexFormulaList() {
     childItem.style.fontSize = '12px';
     childItem.innerText = item.title;
     _renderKatex(item.title, childItem);
-    tabBox.appendChild(childItem);
+    tabBox && tabBox.appendChild(childItem);
     // 创建公式容器
     const containerBox = document.getElementById('formula_box');
     const containerItem = document.createElement('div');
@@ -110,7 +116,7 @@ function renderKatexFormulaList() {
       containerItem.classList.add('active');
       containerItem.style.display = 'flex';
     }
-    containerBox.appendChild(containerItem);
+    containerBox && containerBox.appendChild(containerItem);
 
     item.list.map((row, key) => {
       if (row.title) {
@@ -213,6 +219,7 @@ function saveMathType(activeEditor) {
     if (document.getElementById('katex_preview').innerText == '公式预览') {
       return
     }
+    return
     const input = document.getElementById('katex_input')
     activeEditor.insertContent(msg)
     document.getElementById('edit_modal').style.display = 'none';
@@ -221,20 +228,6 @@ function saveMathType(activeEditor) {
   }, { once: true });
 }
 
-// 根据输入框位置调整公式栏位置
-function fixedToolBar() {
-  window.addEventListener('click', e => {
-    // console.log('window click');
-    // const edit = tinymce
-    // console.log(edit.selection.getRng());
-
-  })
-  // document.querySelectorAll('.tinymce_container').forEach((ele) => {
-  //   ele.addEventListener('mouseover', () => {
-  //     setKatexPosition(ele)
-  //   })
-  // })
-}
 
 function setKatexPosition(ele, show = true) {
   ele.classList.add('tinymce_container_active')
@@ -246,11 +239,13 @@ function setKatexPosition(ele, show = true) {
   }
 }
 
-document.documentElement.addEventListener("mouseup", (e) => {
-  if (!e.target.closest(".tinymce_container_active") && !e.target.closest('#edit_modal')) {
-    hiddenKatexToolbar()
-  }
-});
+function eventMouseUp() {
+  document.documentElement.addEventListener("mouseup", (e) => {
+    if (!e.target.closest(".tinymce_container_active") && !e.target.closest('#edit_modal')) {
+      hiddenKatexToolbar()
+    }
+  });
+}
 
 function hiddenKatexToolbar() {
   document.querySelectorAll(".tinymce_container_active .katex_toolbar").forEach(ele => {
@@ -261,6 +256,49 @@ function hiddenKatexToolbar() {
   })
 }
 
+function renderModal() {
+  const div = document.createElement('div')
+  div.innerHTML = ` <div id="edit_modal" class="edit_modal">
+  <div class="modal_back modal_close"></div>
+  <div class="modal_box">
+    <div class="modal_header">
+      <div>编辑</div>
+      <div class="modal_close"></div>
+    </div>
+    <div class="modal_content modal_hidden">
+      <div class="content_left">
+        <div class="katex_input_box">
+          <textarea id="katex_input" placeholder="输入公式"></textarea>
+        </div>
+        <div id="katex_preview">
+          <div>公式预览</div>
+        </div>
+      </div>
+      <div class="content_right">
+        <div id="tab" class="tab"></div>
+        <div class="tab_value">
+          <div class="item" id="formula_box"></div>
+        </div>
+      </div>
+    </div>
+    <div class="modal_footer">
+      <div style="flex: 1">
+        <div>
+          <a href="https://katex.org/docs/supported.html" target="_blank"
+            >了解如何使用latex</a
+          >
+        </div>
+      </div>
+      <button class="modal_close">取消</button>
+      <button class="save_button" id="save_button">保存</button>
+      <div style="flex: 1"></div>
+    </div>
+  </div>
+</div>`
+  document.body.appendChild(div)
+}
+
+
 
 // 创建编辑器
 function createKatexEdit(props = {}) {
@@ -268,12 +306,13 @@ function createKatexEdit(props = {}) {
     useToolbar = true
   } = props
   const className = '.tinymce_textarea'
-  renderTinymce(className)
+  useToolbar && renderModal()
+  renderTinymce(className, useToolbar)
   useToolbar && renderKatexToolbar(className)
   useToolbar && insert_button()
   useToolbar && renderKatexFormulaList()
   useToolbar && _editKatex()
   useToolbar && _addEditKatex()
   useToolbar && _renderEdit()
-  useToolbar && fixedToolBar()
+  useToolbar && eventMouseUp()
 }

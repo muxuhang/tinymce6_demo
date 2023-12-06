@@ -8,23 +8,27 @@
       rel="stylesheet"
     />
     <style>
-      #editor—wrapper {
+      .editor—wrapper {
         border: 1px solid #ccc;
         z-index: 100; /* 按需定义 */
       }
-      #toolbar-container {
+      .toolbar-container {
         border-bottom: 1px solid #ccc;
       }
-      #editor-container {
+      .editor-container {
         height: 500px;
       }
     </style>
   </head>
   <body>
-    <div id="editor—wrapper">
-      <div id="toolbar-container"><!-- 工具栏 --></div>
-      <div id="editor-container"><!-- 编辑器 --></div>
-  </div>
+    <div class="editor—wrapper">
+      <div class="toolbar-container"><!-- 工具栏 --></div>
+      <div class="editor-container"><!-- 编辑器 --></div>
+    </div>
+    <div class="editor—wrapper">
+      <div class="toolbar-container"><!-- 工具栏 --></div>
+      <div class="editor-container"><!-- 编辑器 --></div>
+    </div>
   </body>
 </html>
 <script src="https://unpkg.com/@wangeditor/editor@latest/dist/index.js"></script>
@@ -40,7 +44,7 @@
   };
 
   const editor = createEditor({
-    selector: '#editor-container',
+    selector: '.editor-container',
     html: '<p></p>',
     config: editorConfig,
     mode: 'default', // or 'simple'
@@ -50,7 +54,7 @@
 
   const toolbar = createToolbar({
     editor,
-    selector: '#toolbar-container',
+    selector: '.toolbar-container',
     config: toolbarConfig,
     mode: 'default', // or 'simple'
   });
