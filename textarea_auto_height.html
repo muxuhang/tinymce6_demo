@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title></title>
+    <style>
+      .auto_height {
+        resize: none;
+        height: auto;
+        display: block;
+        overflow: hidden;
+      }
+    </style>
+  </head>
+  <body>
+    <textarea
+      class="auto_height"
+      style="height: 18px"
+      placeholder="请输入"
+    ></textarea>
+    <div style="height: 1200px"></div>
+    <div class="level">
+      <div class="level-left">
+        <form method="get">
+          <div class="field has-addons">
+            <div class="control">
+              <input
+                type="search"
+                name="search"
+                autofocus
+                class="input"
+                placeholder="请输入搜索关键字"
+              />
+            </div>
+            <div class="control">
+              <input type="submit" value="搜 索" class="button" />
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </body>
+</html>
+<script>
+  const showModal = ()=>{
+    document.querySelector('dialog').showModal()
+  }
+  const eventListenerTextArea = () => {
+    // textarea 自动调整高度
+    document.querySelectorAll('.auto_height').forEach((ele) => {
+      ele.addEventListener('input', (e) => {
+        ele.style.height = 'auto';
+        ele.style.height = ele.scrollHeight + 'px';
+      });
+      ele.style.height = 'auto';
+      ele.style.height = ele.scrollHeight + 'px';
+    });
+  };
+  eventListenerTextArea();
+</script>

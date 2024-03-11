@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <!-- <base href="./images/" target="_blank" /> -->
+  </head>
+  <body>
+    <md-input 
+      name="ks" 
+      data-value="value" 
+      value="测试" 
+      onchange="changeValue()">
+      <div slot="icon">e</div>
+    </md-input>
+</html>
+<script src="./components/index.js"></script>
+<script>
+  function changeValue(params) {
+    console.log(params);
+  }
+</script>

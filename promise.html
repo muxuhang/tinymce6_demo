@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+  <body></body>
+</html>
+<script>
+  const time = new Date();
+  const diff = (time.getDay() + 1) * 24 * 60 * 60 * 1000;
+  const res = new Date(time - diff);
+  // console.log(time.getDate());
+
+  // 父
+  function created() {}
+  function mounted() {}
+  // 子
+  function created() {}
+  function mounted() {}
+
+  // console.log('---------------');
+  // setTimeout(() => {
+  //   // console.log(1);
+  // }, 0);
+  // Promise.resolve().then(() => console.log(2));
+  // console.log(3);
+
+  const errorFun = Promise.reject('error');
+  const successFun = Promise.resolve('success');
+  const successFun2 = new Promise((resolve, reject) => {
+    setTimeout(resolve, 1000, 'success2');
+  });
+  const errorFun2 = new Promise((resolve, reject) => {
+    setTimeout(reject, 1000, 'error2');
+  });
+  // 全部完成，且全部为成功
+  Promise.all([successFun]).then((data) => {
+    console.log('all result', data);
+  });
+  // 全部完成，不管成功还是失败
+  Promise.allSettled([errorFun, successFun]).then((data) => {
+    console.log('allSettled result', data);
+  });
+  //
+  Promise.race([errorFun, errorFun2, successFun2, successFun]).then((data) => {
+    console.log('race result', data);
+  });
+  // 第一个成功结束
+  Promise.any([errorFun, successFun2, successFun]).then((data) => {
+    console.log('any result', data);
+  });
+</script>
+.
